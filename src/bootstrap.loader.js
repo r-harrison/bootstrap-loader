@@ -1,8 +1,19 @@
 /* eslint func-names: 0 */
 
 import semver from 'semver';
+import path from 'path';
+import loaderUtils from 'loader-utils';
+import resolveModule from './utils/resolveModule';
+import checkBootstrapVersion from './utils/checkBootstrapVersion';
+import processStyleLoaders from './utils/processStyleLoaders';
+import joinLoaders from './utils/joinLoaders';
+import buildExtractStylesLoader from './utils/buildExtractStylesLoader';
+import createRequire from './utils/createRequire';
+import logger from './utils/logger';
+import { bootstrapVersion, loglevel, createConfig } from './bootstrap.config';
 
 // For Node <= v0.12.x Babel polyfill is required
+/* eslint-disable global-require */
 if (semver.lt(process.version, '4.0.0') && !global._babelPolyfill) {
   try {
     require('babel-polyfill');
@@ -22,18 +33,7 @@ if (semver.lt(process.version, '4.0.0') && !global._babelPolyfill) {
     }
   }
 }
-
-import path from 'path';
-import loaderUtils from 'loader-utils';
-
-import resolveModule from './utils/resolveModule';
-import checkBootstrapVersion from './utils/checkBootstrapVersion';
-import processStyleLoaders from './utils/processStyleLoaders';
-import joinLoaders from './utils/joinLoaders';
-import buildExtractStylesLoader from './utils/buildExtractStylesLoader';
-import createRequire from './utils/createRequire';
-import logger from './utils/logger';
-import { bootstrapVersion, loglevel, createConfig } from './bootstrap.config';
+/* eslint-enable global-require */
 
 module.exports = function() {};
 
@@ -49,7 +49,7 @@ module.exports.pitch = function(source) {
 
   global.__DEBUG__ = loglevel === 'debug' || process.env.DEBUG === '*';
 
-  logger.debug(`Hey, we're in DEBUG mode! Yabba dabba doo!`);
+  logger.debug('Hey, we\'re in DEBUG mode! Yabba dabba doo!');
 
   logger.debug('Context:', this.context);
   logger.debug('Using Bootstrap version:', bootstrapVersion);
@@ -71,8 +71,8 @@ module.exports.pitch = function(source) {
 
   const bootstrapRelPath = path.relative(this.context, bootstrapPath);
 
-  logger.debug(`Bootstrap module location (abs):`, bootstrapPath);
-  logger.debug(`Bootstrap module location (rel):`, bootstrapRelPath);
+  logger.debug('Bootstrap module location (abs):', bootstrapPath);
+  logger.debug('Bootstrap module location (rel):', bootstrapRelPath);
 
   const bootstrapNPMVersion = (
     checkBootstrapVersion(bootstrapVersion, bootstrapPath)

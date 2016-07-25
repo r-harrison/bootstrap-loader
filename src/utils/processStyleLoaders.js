@@ -1,4 +1,4 @@
-/*  */
+/* eslint no-param-reassign: ["error", { "props": false }] */
 
 import escapeRegExp from 'escape-regexp';
 
